@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis 15 Años - Karen Bianca</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome 6 CDN para Iconos Modernos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles & Animations -->
+    <style>
+        :root {
+            --primary-rose: #e8a5b8;
+            --dark-rose: #b85b75;
+            --soft-gold: #d4af37;
+            --bg-dark: #12090e;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-dark);
+            color: #fcefe6;
+            overflow-x: hidden;
+        }
+
+        .font-script {
+            font-family: 'Great Vibes', cursive;
+        }
+
+        .font-serif-title {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Glassmorphism Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(232, 165, 184, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .gold-border {
+            border: 2px solid #d4af37;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-soft {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        .animate-pulse-soft {
+            animation: pulse-soft 3s ease-in-out infinite;
+        }
+
+        /* Petal Canvas Styles */
+        #petalCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Envelope Styles */
+        .envelope-wrapper {
+            transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+        }
+
+        .envelope-open {
+            transform: translateY(-100vh) scale(0.8);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Smooth Scroll Behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="min-h-screen relative selection:bg-rose-500 selection:text-white">
+
+    <canvas id="petalCanvas"></canvas>
+
+    <!-- Audio Player (Oculto) -->
+    <!-- Nota: Puedes cambiar este enlace mp3 por el tema musical que prefieras para la fiesta -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=waltz-of-the-flowers-112836.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Botón Flotante para Audio Mute/Play (Aparece tras abrir) -->
+    <button id="musicToggle" onclick="toggleAudio()" class="hidden fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full glass-card border border-rose-300 text-rose-200 flex items-center justify-center text-xl shadow-lg hover:scale-110 transition-transform duration-300 focus:outline-none">
+        <i id="musicIcon" class="fa-solid fa-music text-rose-300"></i>
+    </button>
+
+    <div id="welcomeScreen" class="envelope-wrapper fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#1d0d17] via-[#12090e] to-[#2a1120]">
+        <!-- Decoración Floral sutil de fondo -->
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(232,165,184,0.15)_0%,transparent_70%)] pointer-events-none"></div>
+
+        <div class="glass-card max-w-md w-full p-8 rounded-3xl text-center border border-rose-300/30 shadow-2xl relative overflow-hidden animate-pulse-soft">
+            <div class="absolute -top-12 -left-12 w-28 h-28 bg-rose-500/10 rounded-full blur-xl"></div>
+            <div class="absolute -bottom-12 -right-12 w-28 h-28 bg-amber-500/10 rounded-full blur-xl"></div>
+
+            <div class="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-full bg-rose-500/10 border border-rose-300/40 text-rose-300 text-3xl">
+                <i class="fa-solid fa-envelope-open-text"></i>
+            </div>
+
+            <p class="text-rose-200 uppercase tracking-widest text-xs font-semibold mb-2">Tienes una invitación especial de:</p>
+            <h1 class="font-script text-5xl text-rose-200 mb-2">Karen Bianca</h1>
+            <p class="font-serif-title text-amber-300/90 tracking-widest text-sm mb-8">MIS 15 AÑOS</p>
+
+            <button onclick="startExperience()" class="w-full py-4 px-8 rounded-full bg-gradient-to-r from-rose-400 via-rose-500 to-amber-400 text-gray-900 font-bold text-sm tracking-widest uppercase shadow-lg hover:shadow-rose-500/40 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-3 group">
+                <i class="fa-solid fa-sparkles text-lg group-hover:rotate-12 transition-transform"></i>
+                <span>Abrir Invitación</span>
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+            <p class="text-xs text-rose-300/60 mt-4"><i class="fa-solid fa-expand mr-1"></i> Se activará en pantalla completa con música de fondo</p>
+        </div>
+    </div>
+
+    <main id="mainContent" class="max-w-2xl mx-auto px-4 py-8 space-y-12 relative z-10 opacity-0 transition-opacity duration-1000">
+
+        <!-- HEADER SECTION -->
+        <section class="text-center py-8 relative">
+            <div class="inline-block px-4 py-1 rounded-full glass-card border border-rose-300/30 text-rose-300 text-xs tracking-widest uppercase mb-4">
+                <i class="fa-solid fa-crown mr-1 text-amber-300"></i> Estás Invitado
+            </div>
+            <h1 class="font-serif-title text-2xl md:text-3xl tracking-widest text-amber-200/90 mb-2">CELEBRACIÓN DE</h1>
+            <div class="relative inline-block">
+                <h2 class="font-script text-6xl md:text-8xl text-rose-200 my-2 drop-shadow-[0_4px_10px_rgba(232,165,184,0.3)]">Karen Bianca</h2>
+            </div>
+            <p class="font-serif-title text-xl md:text-2xl text-amber-300 tracking-widest mt-2">ALBINO CHOQUE</p>
+        </section>
+
+        <section class="flex flex-col items-center">
+            <div class="relative w-64 h-64 md:w-72 md:h-72 rounded-full p-2 bg-gradient-to-tr from-amber-300 via-rose-300 to-amber-200 shadow-[0_0_30px_rgba(232,165,184,0.3)] animate-float">
+                <div class="w-full h-full rounded-full overflow-hidden border-4 border-[#12090e] relative">
+                    <!-- Foto de la Quinceañera (Puedes reemplazar el atributo 'src' por el link o ruta de tu foto) -->
+                    <img id="quincePhoto" src="quince.jpg" alt="Karen Bianca Albino Choque" class="w-full h-full object-cover">
+                </div>
+            </div>
+            <p class="text-xs text-rose-200/50 mt-3 flex items-center gap-1">
+                <i class="fa-solid fa-camera"></i> Karen Bianca Albino Choque
+            </p>
+        </section>
+
+        <section class="glass-card rounded-3xl p-8 text-center relative overflow-hidden">
+            <div class="absolute -right-8 -bottom-8 text-rose-500/5 text-9xl pointer-events-none">
+                <i class="fa-solid fa-heart"></i>
+            </div>
+            <p class="text-xs uppercase tracking-widest text-amber-300/80 mb-4 font-semibold">Con la bendición de mis padres</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-4">
+                <div class="p-4 rounded-2xl bg-white/5 border border-rose-300/10">
+                    <i class="fa-solid fa-heart-pulse text-rose-300 text-xl mb-2"></i>
+                    <p class="text-xs text-rose-200/70 uppercase tracking-wider">Mamá</p>
+                    <p class="font-serif-title text-lg text-rose-100 mt-1">María Choque Pascual</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/5 border border-rose-300/10">
+                    <i class="fa-solid fa-user-shield text-amber-300 text-xl mb-2"></i>
+                    <p class="text-xs text-rose-200/70 uppercase tracking-wider">Papá</p>
+                    <p class="font-serif-title text-lg text-rose-100 mt-1">Germán Albino Caceres</p>
+                </div>
+            </div>
+            <p class="italic text-rose-200/80 text-sm mt-4 font-light">"Hay momentos en la vida que son especiales por sí solos, pero compartirlos con las personas que amas los hace inolvidables."</p>
+        </section>
+
+        <section class="glass-card rounded-3xl p-8 text-center border-amber-300/30">
+            <div class="flex items-center justify-center gap-2 mb-2 text-amber-300">
+                <i class="fa-regular fa-clock text-xl"></i>
+                <h3 class="font-serif-title text-xl tracking-wider">CUENTA REGRESIVA</h3>
+            </div>
+            <p class="text-xs text-rose-200/70 mb-6">10 de Octubre de 2026 • 18:00 HS</p>
+
+            <div class="grid grid-cols-4 gap-2 md:gap-4 max-w-md mx-auto">
+                <div class="glass-card p-3 rounded-2xl border border-rose-300/20">
+                    <span id="days" class="block font-serif-title text-2xl md:text-4xl text-rose-200 font-bold">00</span>
+                    <span class="text-[10px] md:text-xs text-rose-300/70 uppercase tracking-widest">Días</span>
+                </div>
+                <div class="glass-card p-3 rounded-2xl border border-rose-300/20">
+                    <span id="hours" class="block font-serif-title text-2xl md:text-4xl text-rose-200 font-bold">00</span>
+                    <span class="text-[10px] md:text-xs text-rose-300/70 uppercase tracking-widest">Horas</span>
+                </div>
+                <div class="glass-card p-3 rounded-2xl border border-rose-300/20">
+                    <span id="minutes" class="block font-serif-title text-2xl md:text-4xl text-rose-200 font-bold">00</span>
+                    <span class="text-[10px] md:text-xs text-rose-300/70 uppercase tracking-widest">Min</span>
+                </div>
+                <div class="glass-card p-3 rounded-2xl border border-rose-300/20">
+                    <span id="seconds" class="block font-serif-title text-2xl md:text-4xl text-rose-200 font-bold">00</span>
+                    <span class="text-[10px] md:text-xs text-rose-300/70 uppercase tracking-widest">Seg</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card rounded-3xl p-8 text-center relative">
+            <div class="w-14 h-14 mx-auto rounded-full bg-rose-500/10 border border-rose-300/30 flex items-center justify-center text-rose-300 text-2xl mb-4">
+                <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <h3 class="font-serif-title text-xl text-amber-200 tracking-wider mb-2">LUGAR DEL EVENTO</h3>
+            <p class="text-rose-100 text-lg font-medium mb-1">Calle Santa Clara</p>
+            <p class="text-rose-200/70 text-sm mb-6">entre calle Virgen de Copacabana</p>
+
+            <a href="https://maps.app.goo.gl/mbdy58Gy61rfum4X7" target="_blank" class="inline-flex items-center justify-center gap-3 px-8 py-3 rounded-full bg-amber-400/10 border border-amber-300/50 text-amber-200 font-semibold text-xs tracking-widest uppercase hover:bg-amber-300 hover:text-gray-900 transition-all duration-300 group">
+                <i class="fa-solid fa-map-location-dot text-base group-hover:scale-110 transition-transform"></i>
+                <span>Ver ubicación en Google Maps</span>
+            </a>
+        </section>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Dress Code -->
+            <section class="glass-card rounded-3xl p-6 text-center">
+                <div class="w-12 h-12 mx-auto rounded-full bg-rose-500/10 border border-rose-300/30 flex items-center justify-center text-rose-300 text-xl mb-3">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+                <h4 class="font-serif-title text-lg text-amber-200 mb-2">CÓDIGO DE VESTIMENTA</h4>
+                <p class="text-rose-100 font-semibold text-sm">Traje Formal</p>
+                <p class="text-xs text-rose-200/60 mt-1">Vestido elegante / Traje formal</p>
+            </section>
+
+            <!-- Regalos / Lluvia de sobres -->
+            <section class="glass-card rounded-3xl p-6 text-center">
+                <div class="w-12 h-12 mx-auto rounded-full bg-amber-500/10 border border-amber-300/30 flex items-center justify-center text-amber-300 text-xl mb-3">
+                    <i class="fa-solid fa-gift"></i>
+                </div>
+                <h4 class="font-serif-title text-lg text-amber-200 mb-2">REGALOS</h4>
+                <p class="text-rose-100 font-semibold text-sm">Lluvia de Sobres</p>
+                <p class="text-xs text-rose-200/60 mt-1">Su presencia es nuestro mejor regalo</p>
+            </section>
+        </div>
+
+        <section class="glass-card rounded-3xl p-8 text-center border-emerald-500/30 relative overflow-hidden">
+            <div class="w-16 h-16 mx-auto rounded-full bg-emerald-500/10 border border-emerald-400/40 flex items-center justify-center text-emerald-400 text-3xl mb-4">
+                <i class="fa-brands fa-whatsapp"></i>
+            </div>
+            <h3 class="font-serif-title text-2xl text-emerald-300 tracking-wider mb-2">CONFIRMACIÓN DE ASISTENCIA</h3>
+            <p class="text-rose-200/80 text-sm mb-6 max-w-md mx-auto">Por favor, confirma tu asistencia con anticipación para esperarte en este día tan especial.</p>
+
+            <a id="rsvpButton" href="https://api.whatsapp.com/send?phone=59178680478&text=Hola%2C%20asistir%C3%A9%20a%20la%20fiesta%2C%20mi%20nombre%20es..." target="_blank" class="inline-flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-sm tracking-widest uppercase shadow-lg shadow-emerald-500/20 hover:scale-105 transition-all duration-300">
+                <i class="fa-brands fa-whatsapp text-xl"></i>
+                <span>Confirmar por WhatsApp</span>
+            </a>
+        </section>
+
+        <!-- FOOTER -->
+        <!-- FOOTER -->
+<footer class="text-center py-8 border-t border-rose-300/10">
+    <a href="https://api.whatsapp.com/send?phone=59178680478&text=Hola%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre%20las%20invitaciones%20digitales." 
+       target="_blank" 
+       class="inline-block hover:scale-105 transition-transform duration-300">
+        <img src="csc logo.png" alt="Logotipo" class="h-12 mx-auto mb-2 object-contain">
+    </a>
+    <p class="text-[10px] text-rose-300/50 uppercase tracking-widest mt-2">invitaciones digitales para eventos sociales</p>
+</footer>
+
+    </main>
+
+    <script>
+        /* Interactive Experience & Fullscreen logic */
+        let isAudioPlaying = false;
+        const bgMusic = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        const musicIcon = document.getElementById('musicIcon');
+
+        function startExperience() {
+            // Fullscreen attempt
+            const docEl = document.documentElement;
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen().catch(err => console.log(err));
+            } else if (docEl.webkitRequestFullscreen) {
+                docEl.webkitRequestFullscreen();
+            }
+
+            // Hide Welcome Screen
+            const welcome = document.getElementById('welcomeScreen');
+            welcome.classList.add('envelope-open');
+
+            // Show Main Content
+            const main = document.getElementById('mainContent');
+            main.classList.remove('opacity-0');
+
+            // Audio Playback
+            playAudio();
+
+            // Show Floating Music Toggle
+            musicToggle.classList.remove('hidden');
+        }
+
+        function playAudio() {
+            bgMusic.play().then(() => {
+                isAudioPlaying = true;
+                musicIcon.className = "fa-solid fa-music text-rose-300";
+            }).catch(e => console.log("Audio autoplay prevented"));
+        }
+
+        function toggleAudio() {
+            if (isAudioPlaying) {
+                bgMusic.pause();
+                isAudioPlaying = false;
+                musicIcon.className = "fa-solid fa-volume-xmark text-rose-300/50";
+            } else {
+                bgMusic.play();
+                isAudioPlaying = true;
+                musicIcon.className = "fa-solid fa-music text-rose-300";
+            }
+        }
+
+        /* Countdown Timer Logic for October 10, 2026 18:00 */
+        const eventDate = new Date('October 10, 2026 18:00:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = eventDate - now;
+
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = String(days).padStart(2, '0');
+                document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+                document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+            } else {
+                document.getElementById('days').innerText = '00';
+                document.getElementById('hours').innerText = '00';
+                document.getElementById('minutes').innerText = '00';
+                document.getElementById('seconds').innerText = '00';
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        /* Falling Petals Canvas Effect */
+        const canvas = document.getElementById('petalCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const petals = [];
+        const petalCount = 25;
+
+        class Petal {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height - canvas.height;
+                this.size = Math.random() * 8 + 4;
+                this.speedY = Math.random() * 1.5 + 0.8;
+                this.speedX = Math.random() * 0.8 - 0.4;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.rotation = Math.random() * 360;
+                this.spin = (Math.random() - 0.5) * 2;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.01) + this.speedX;
+                this.rotation += this.spin;
+
+                if (this.y > canvas.height) {
+                    this.y = -20;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(232, 165, 184, ${this.opacity})`;
+                ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < petalCount; i++) {
+            petals.push(new Petal());
+        }
+
+        function animatePetals() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            petals.forEach(petal => {
+                petal.update();
+                petal.draw();
+            });
+            requestAnimationFrame(animatePetals);
+        }
+
+        window.onload = function() {
+            animatePetals();
+        };
+    </script>
+</body>
+</html>
